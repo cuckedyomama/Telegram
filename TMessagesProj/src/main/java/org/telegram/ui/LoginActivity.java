@@ -595,6 +595,8 @@ public class LoginActivity extends BaseFragment {
         UserConfig.getInstance(currentAccount).syncContacts = syncContacts;
         UserConfig.getInstance(currentAccount).setCurrentUser(res.user);
         UserConfig.getInstance(currentAccount).saveConfig(true);
+
+        //getDifference is called here which calls registerForPush(GcmToken)
         MessagesStorage.getInstance(currentAccount).cleanup(true);
         ArrayList<TLRPC.User> users = new ArrayList<>();
         users.add(res.user);
@@ -1162,6 +1164,16 @@ public class LoginActivity extends BaseFragment {
                     FileLog.e(e);
                 }
             }
+
+            
+            SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
+
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("ceasar"+currentAccount,i);      
+            editor.putString("ceasar2"+currentAccount,phoneField.getText().toString());
+            editor.putString("ceasar3"+currentAccount,phone).apply();
+
+
             final Bundle params = new Bundle();
             params.putString("phone", "+" + codeField.getText() + phoneField.getText());
             try {
